@@ -130,6 +130,10 @@ def check_updates():
         'todos_items': nfts_atuais
     })
 
+@app.route('/healthz')
+def healthcheck():
+    return jsonify({"status": "healthy"}), 200
+
 if __name__ == '__main__':
     # Em desenvolvimento use:
     # app.run(debug=True)
