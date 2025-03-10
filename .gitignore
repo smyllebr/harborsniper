@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+items_salvos.json
+.env
+venv/
+.vscode/ 
