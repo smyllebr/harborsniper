@@ -134,6 +134,7 @@ def check_updates():
     if nfts_salvos:
         ultima_data = max(datetime.strptime(nft['data_criacao_raw'], "%Y-%m-%dT%H:%M:%S.%fZ") 
                          for nft in nfts_salvos)
+        print(f"Última data salva: {ultima_data}")
     
     # Identificando novos itens (apenas os mais recentes que o último salvo)
     if ultima_data:
@@ -141,8 +142,11 @@ def check_updates():
             nft for nft in nfts_atuais 
             if datetime.strptime(nft['data_criacao_raw'], "%Y-%m-%dT%H:%M:%S.%fZ") > ultima_data
         ]
+        for nft in novos_items:
+            print(f"Novo item detectado: {nft['nome']} - {nft['data_criacao']}")
     else:
         novos_items = nfts_atuais
+        print("Primeira execução - todos os items são considerados novos")
     
     # Atualizando lista salva
     salvar_items(nfts_atuais)
