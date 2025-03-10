@@ -101,9 +101,20 @@ def index():
     nfts_atuais = processar_nfts(dados)
     nfts_salvos = carregar_items_salvos()
     
-    # Identificando novos itens
-    ids_salvos = {nft['id'] for nft in nfts_salvos}
-    novos_items = [nft for nft in nfts_atuais if nft['id'] not in ids_salvos]
+    # Encontrar a data do item mais recente salvo
+    ultima_data = None
+    if nfts_salvos:
+        ultima_data = max(datetime.strptime(nft['data_criacao_raw'], "%Y-%m-%dT%H:%M:%S.%fZ") 
+                         for nft in nfts_salvos)
+    
+    # Identificando novos itens (apenas os mais recentes que o último salvo)
+    if ultima_data:
+        novos_items = [
+            nft for nft in nfts_atuais 
+            if datetime.strptime(nft['data_criacao_raw'], "%Y-%m-%dT%H:%M:%S.%fZ") > ultima_data
+        ]
+    else:
+        novos_items = nfts_atuais
     
     # Atualizando lista salva
     salvar_items(nfts_atuais)
@@ -118,9 +129,20 @@ def check_updates():
     nfts_atuais = processar_nfts(dados)
     nfts_salvos = carregar_items_salvos()
     
-    # Identificando novos itens
-    ids_salvos = {nft['id'] for nft in nfts_salvos}
-    novos_items = [nft for nft in nfts_atuais if nft['id'] not in ids_salvos]
+    # Encontrar a data do item mais recente salvo
+    ultima_data = None
+    if nfts_salvos:
+        ultima_data = max(datetime.strptime(nft['data_criacao_raw'], "%Y-%m-%dT%H:%M:%S.%fZ") 
+                         for nft in nfts_salvos)
+    
+    # Identificando novos itens (apenas os mais recentes que o último salvo)
+    if ultima_data:
+        novos_items = [
+            nft for nft in nfts_atuais 
+            if datetime.strptime(nft['data_criacao_raw'], "%Y-%m-%dT%H:%M:%S.%fZ") > ultima_data
+        ]
+    else:
+        novos_items = nfts_atuais
     
     # Atualizando lista salva
     salvar_items(nfts_atuais)
@@ -135,5 +157,4 @@ def healthcheck():
     return jsonify({"status": "healthy"}), 200
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 10000))
-    app.run(host='0.0.0.0', port=port) 
+    app.run(host='0.0.0.0', port=10000, debug=True) 
