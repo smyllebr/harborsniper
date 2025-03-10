@@ -321,8 +321,11 @@
         const updateTimeInput = document.getElementById('updateTime');
 
         function playNotification() {
+            console.log('Tentando tocar som. Som habilitado:', soundToggle.checked);
             if (soundToggle.checked) {
-                notificationSound.play();
+                notificationSound.play().catch(error => {
+                    console.error('Erro ao tocar som:', error);
+                });
             }
         }
 
@@ -385,7 +388,9 @@
                 const data = await response.json();
                 
                 // Tocar som se houver novos itens
+                console.log('Novos items:', data.novos_items);
                 if (data.novos_items && data.novos_items.length > 0) {
+                    console.log('Detectados', data.novos_items.length, 'novos items');
                     playNotification();
                 }
                 
